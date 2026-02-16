@@ -12,26 +12,36 @@ body{
   text-align:center;
   padding:40px;
 }
+
 .card{
   background:#161b22;
   border-radius:12px;
-  padding:25px;
-  margin:20px auto;
+  padding:20px;
+  margin:15px auto;
   max-width:420px;
 }
-select, button{
+
+select,button{
   padding:10px;
   margin-top:10px;
   border-radius:8px;
   border:none;
 }
+
 button{
   background:#238636;
   color:white;
   cursor:pointer;
 }
-.hidden{display:none;}
-h1{margin-bottom:30px;}
+
+.copy-btn{
+  background:#30363d;
+  margin-left:5px;
+}
+
+.hidden{
+  display:none;
+}
 </style>
 </head>
 
@@ -42,48 +52,72 @@ h1{margin-bottom:30px;}
 <!-- PASO 1 -->
 <div class="card">
 <h2>1️⃣ Selecciona tu plan</h2>
+
 <select id="plan" onchange="mostrarMetodo()">
 <option value="">-- Elige un plan --</option>
-<option value="sports1">SPORTS 1M — 19 USD / 19 USDT / 75.000 COP</option>
-<option value="sports3">SPORTS 3M — 49 USD / 49 USDT / 195.000 COP</option>
-<option value="sports6">SPORTS 6M — 79 USD / 79 USDT / 315.000 COP</option>
-<option value="sports12">SPORTS 12M — 109 USD / 109 USDT / 435.000 COP</option>
-<option value="sportslife">SPORTS LIFETIME — 149 USD / 149 USDT / 595.000 COP</option>
-<option value="markets">MARKETS LIFETIME — 99 USD / 99 USDT / 395.000 COP</option>
-<option value="complete">COMPLETE LIFETIME — 209 USD / 209 USDT / 835.000 COP</option>
+<option value="sports1">$19 SPORTS 1M</option>
+<option value="sports3">$49 SPORTS 3M</option>
+<option value="sports6">$79 SPORTS 6M</option>
+<option value="sports12">$109 SPORTS 12M</option>
+<option value="sportslife">$149 SPORTS LIFETIME</option>
+<option value="markets">$99 MARKETS LIFETIME</option>
+<option value="complete">$209 COMPLETE LIFETIME</option>
 </select>
+
 </div>
 
 <!-- PASO 2 -->
-<div id="metodoCard" class="card hidden">
+<div class="card hidden" id="metodoCard">
 <h2>2️⃣ Método de pago</h2>
+
 <select id="metodo" onchange="mostrarPago()">
-<option value="">-- Elige un método --</option>
+<option value="">-- Elige método --</option>
 <option value="binance">Binance Pay</option>
-<option value="usdt">USDT TRC20</option>
-<option value="transferencia">Transferencia Bancaria</option>
+<option value="usdt">USDT (TRC20)</option>
+<option value="transferencia">Transferencia (Nequi / Davivienda)</option>
 </select>
+
 </div>
 
 <!-- PASO 3 -->
-<div id="pagoCard" class="card hidden">
+<div class="card hidden" id="pagoCard">
 <h2>3️⃣ Datos de pago</h2>
+
+<p id="planSeleccionado"></p>
+
+<p id="monto"></p>
 
 <p id="datos"></p>
 
-<hr style="margin:15px 0; opacity:0.2;">
+<div id="copyButtons" class="hidden">
+<button class="copy-btn" onclick="copiarTexto()">📋 Copiar datos</button>
+</div>
 
-<p id="montoFinal"></p>
+<br>
 
-<button onclick="verificar()">Enviar comprobante en Discord</button>
+<button onclick="verificar()">Verificar pago en Discord</button>
+
+<p style="margin-top:15px;font-size:14px;color:#9ca3af;">
+Envía el comprobante con:<br>
+• Usuario de Discord<br>
+• Plan adquirido
+</p>
+
 </div>
 
 <script>
+
+let planNombre = "";
+let datosPago = "";
+
 function mostrarMetodo(){
+
   let plan = document.getElementById("plan").value;
+
   if(plan !== ""){
     document.getElementById("metodoCard").classList.remove("hidden");
   }
+
 }
 
 function mostrarPago(){
@@ -91,45 +125,65 @@ function mostrarPago(){
   let plan = document.getElementById("plan").value;
   let metodo = document.getElementById("metodo").value;
 
+  if(plan === "" || metodo === "") return;
+
+  document.getElementById("pagoCard").classList.remove("hidden");
+
   let monto = {
-    sports1:"19 USD / 19 USDT / 75.000 COP",
-    sports3:"49 USD / 49 USDT / 195.000 COP",
-    sports6:"79 USD / 79 USDT / 315.000 COP",
-    sports12:"109 USD / 109 USDT / 435.000 COP",
-    sportslife:"149 USD / 149 USDT / 595.000 COP",
-    markets:"99 USD / 99 USDT / 395.000 COP",
-    complete:"209 USD / 209 USDT / 835.000 COP"
+    sports1: "19 USD / 19 USDT / 75.000 COP",
+    sports3: "49 USD / 49 USDT / 195.000 COP",
+    sports6: "79 USD / 79 USDT / 315.000 COP",
+    sports12: "109 USD / 109 USDT / 435.000 COP",
+    sportslife: "149 USD / 149 USDT / 595.000 COP",
+    markets: "99 USD / 99 USDT / 395.000 COP",
+    complete: "209 USD / 209 USDT / 835.000 COP"
   };
 
-  let datos = "";
+  let nombres = {
+    sports1: "SPORTS 1M",
+    sports3: "SPORTS 3M",
+    sports6: "SPORTS 6M",
+    sports12: "SPORTS 12M",
+    sportslife: "SPORTS LIFETIME",
+    markets: "MARKETS LIFETIME",
+    complete: "COMPLETE LIFETIME"
+  };
+
+  planNombre = nombres[plan];
+
+  document.getElementById("planSeleccionado").innerText =
+  "Plan seleccionado: " + planNombre;
+
+  document.getElementById("monto").innerText =
+  "Monto a pagar: " + monto[plan];
 
   if(metodo === "binance"){
-    datos = "Binance Pay ID:<br><b>1072509354</b>";
+    datosPago = "Pay ID: 1072509354";
   }
 
   if(metodo === "usdt"){
-    datos = "Wallet TRC20:<br><b>TXh7l0X5jt3jAHbCDm7ic64EbvbQME</b>";
+    datosPago = "Wallet TRC20: Tpxh71QX5tj3iAmHcDCm7ic64EbFvbQMe";
   }
 
   if(metodo === "transferencia"){
-    datos = `
-    Nequi: <b>3042875991</b><br>
-    Davivienda: <b>488447751451</b><br>
-    Llave: <b>3042875991</b>
-    `;
+    datosPago =
+    "Nequi: 3042875991\nDavivienda: 488447751451\nLlave: 3042875991";
   }
 
-  document.getElementById("datos").innerHTML = datos;
+  document.getElementById("datos").innerText = datosPago;
 
-  document.getElementById("montoFinal").innerHTML =
-  "<b>Monto a pagar:</b><br>" + monto[plan];
+  document.getElementById("copyButtons").classList.remove("hidden");
 
-  document.getElementById("pagoCard").classList.remove("hidden");
+}
+
+function copiarTexto(){
+  navigator.clipboard.writeText(datosPago);
 }
 
 function verificar(){
-  window.open("https://discord.com/channels/1470902821296672823/1472373269381255198","_blank");
+  window.open("https://discord.com/channels/1470902821296672823/1472373269381255198", "_blank");
 }
+
 </script>
 
 </body>
