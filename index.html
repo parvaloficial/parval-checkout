@@ -1,1 +1,133 @@
+<script>
 
+let planNombre = "";
+let codigoOrden = "";
+
+const nombres = {
+  sports1: "SPORTS 1M",
+  sports3: "SPORTS 3M",
+  sports6: "SPORTS 6M",
+  sports12: "SPORTS 12M",
+  sportslife: "SPORTS LIFETIME",
+  markets: "MARKETS LIFETIME",
+  complete: "COMPLETE LIFETIME"
+};
+
+const monto = {
+  sports1: "19 USD / 19 USDT / 75.000 COP",
+  sports3: "49 USD / 49 USDT / 185.000 COP",
+  sports6: "79 USD / 79 USDT / 300.000 COP",
+  sports12: "109 USD / 109 USDT / 420.000 COP",
+  sportslife: "149 USD / 149 USDT / 550.000 COP",
+  markets: "99 USD / 99 USDT / 370.000 COP",
+  complete: "209 USD / 209 USDT / 770.000 COP"
+};
+
+function generarCodigo() {
+  const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let resultado = "PARVAL-";
+  for (let i = 0; i < 6; i++) {
+    resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+  }
+  return resultado;
+}
+
+function mostrarMetodo() {
+  let plan = document.getElementById("plan").value;
+
+  if (plan !== "") {
+    document.getElementById("metodoCard").classList.remove("hidden");
+    document.getElementById("pagoCard").classList.add("hidden");
+  }
+}
+
+function mostrarPago() {
+
+  let plan = document.getElementById("plan").value;
+  let metodo = document.getElementById("metodo").value;
+
+  if (metodo === "") return;
+
+  codigoOrden = generarCodigo();
+
+  planNombre = nombres[plan];
+
+  document.getElementById("planSeleccionado").innerText =
+    "Plan seleccionado: " + planNombre;
+
+  document.getElementById("monto").innerText =
+    "Monto a pagar: " + monto[plan];
+
+  let htmlDatos = "";
+  let botones = "";
+
+  // 🟡 BINANCE PAY
+  if (metodo === "binance") {
+
+    const payId = "1072509354";
+
+    htmlDatos = "Pay ID: " + payId;
+
+    botones = `
+      <button class="copy-btn" onclick="copiarTexto('${payId}')">📋 Copiar Pay ID</button>
+    `;
+  }
+
+  // 🟠 USDT TRC20
+  if (metodo === "usdt") {
+
+    const wallet = "Tpxh71QX5jt3jAmHcDCm7ic64EbFvbQMe";
+
+    htmlDatos = "Wallet TRC20: " + wallet;
+
+    botones = `
+      <button class="copy-btn" onclick="copiarTexto('${wallet}')">📋 Copiar Wallet</button>
+    `;
+  }
+
+  // 🏦 TRANSFERENCIA
+  if (metodo === "transferencia") {
+
+    const nequi = "3042875991";
+    const davivienda = "488447751451";
+    const llave = "3042875991"; // Llave Bre-B
+
+    htmlDatos = `
+      Nequi: ${nequi}<br>
+      Davivienda: ${davivienda}<br>
+      Llave Bre-B: ${llave}
+    `;
+
+    botones = `
+      <button class="copy-btn" onclick="copiarTexto('${nequi}')">📋 Copiar Nequi</button>
+      <button class="copy-btn" onclick="copiarTexto('${davivienda}')">📋 Copiar Davivienda</button>
+      <button class="copy-btn" onclick="copiarTexto('${llave}')">📋 Copiar Llave Bre-B</button>
+    `;
+  }
+
+  document.getElementById("datos").innerHTML = htmlDatos;
+
+  document.getElementById("codigoOrden").innerText = codigoOrden;
+
+  document.getElementById("copyButtons").innerHTML =
+    botones +
+    `<br><br>
+     <button class="copy-btn" onclick="copiarTexto('${codigoOrden}')">📋 Copiar código</button>`;
+
+  document.getElementById("copyButtons").classList.remove("hidden");
+
+  document.getElementById("pagoCard").classList.remove("hidden");
+}
+
+function copiarTexto(texto) {
+  navigator.clipboard.writeText(texto);
+}
+
+function verificar() {
+  window.open(
+    "https://discord.com/channels/1470902821296672823/1472373269381255198",
+    "_blank"
+  );
+}
+
+</script>
