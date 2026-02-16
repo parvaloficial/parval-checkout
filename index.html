@@ -96,7 +96,6 @@ Envía en el ticket:<br>
 <script>
 
 let codigoOrden = "";
-let planSeleccionadoGlobal = "";
 
 const nombres = {
   sports1: "SPORTS 1M",
@@ -143,10 +142,9 @@ function mostrarPago(){
   if(metodo==="") return;
 
   codigoOrden=generarCodigo();
-  planSeleccionadoGlobal = nombres[plan];
 
   document.getElementById("planSeleccionado").innerText=
-    "Plan seleccionado: "+planSeleccionadoGlobal;
+    "Plan seleccionado: "+nombres[plan];
 
   document.getElementById("monto").innerText=
     "Monto a pagar: "+monto[plan];
@@ -196,16 +194,10 @@ function copiarTexto(texto){
 }
 
 function verificar(){
-
-  let mensaje =
-  "Código de orden: " + codigoOrden +
-  "%0APlan: " + planSeleccionadoGlobal;
-
-  let url =
-  "https://discord.com/channels/1470902821296672823/1472373269381255198" +
-  "?message=" + mensaje;
-
-  window.open(url, "_blank");
+  window.open(
+    "https://discord.com/channels/1470902821296672823/1472373269381255198",
+    "_blank"
+  );
 }
 
 </script>
