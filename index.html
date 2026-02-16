@@ -5,42 +5,51 @@
 <title>PARVAL Checkout</title>
 
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#0b0f17;
-  color:white;
-  text-align:center;
-  padding:40px;
+body {
+    font-family: Arial, sans-serif;
+    background: #0d1117;
+    color: white;
+    text-align: center;
+    padding: 40px;
 }
 
-.card{
-  background:#111827;
-  border-radius:12px;
-  padding:20px;
-  margin:15px auto;
-  max-width:420px;
+.card {
+    background: #161b22;
+    border-radius: 12px;
+    padding: 25px;
+    margin: 20px auto;
+    max-width: 500px;
 }
 
-select,button{
-  padding:10px;
-  margin-top:10px;
-  border-radius:6px;
-  border:none;
+select {
+    padding: 8px;
+    margin-top: 10px;
 }
 
-button{
-  background:#16a34a;
-  color:white;
-  cursor:pointer;
+button {
+    background: #238636;
+    border: none;
+    padding: 10px 18px;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
 }
 
-.copy-btn{
-  background:#374151;
-  margin:5px;
+.copy-btn {
+    background: #30363d;
 }
 
-.hidden{
-  display:none;
+.hidden {
+    display: none;
+}
+
+.code-box {
+    background: #21262d;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -85,123 +94,108 @@ button{
 <p id="monto"></p>
 <p id="datos"></p>
 
-<div id="copyButtons" class="hidden"></div>
+<p><strong>Código de orden:</strong></p>
+<div class="code-box" id="codigoOrden"></div>
+<button class="copy-btn" onclick="copiarCodigo()">📋 Copiar código</button>
 
-<br>
+<br><br>
 
-<button onclick="verificar()">Verificar pago en Discord</button>
+<button onclick="verificar()">Abrir ticket de verificación</button>
 
-<p style="margin-top:15px;font-size:14px;color:#9ca3af;">
-Envía el comprobante con:<br>
+<p style="margin-top:15px;font-size:13px;color:#9ca3af;">
+Envía en el ticket:<br>
+• Código de orden<br>
 • Usuario de Discord<br>
-• Plan adquirido
+• Comprobante<br>
 </p>
 
 </div>
 
 <script>
 
-let planNombre = "";
-let datosPago = "";
+let codigoActual = "";
 
-const montos = {
-sports1:"19 USD / 19 USDT / 75.000 COP",
-sports3:"49 USD / 49 USDT / 195.000 COP",
-sports6:"79 USD / 79 USDT / 315.000 COP",
-sports12:"109 USD / 109 USDT / 435.000 COP",
-sportslife:"149 USD / 149 USDT / 595.000 COP",
-markets:"99 USD / 99 USDT / 395.000 COP",
-complete:"209 USD / 209 USDT / 835.000 COP"
-};
-
-const nombres = {
-sports1:"SPORTS 1M",
-sports3:"SPORTS 3M",
-sports6:"SPORTS 6M",
-sports12:"SPORTS 12M",
-sportslife:"SPORTS LIFETIME",
-markets:"MARKETS LIFETIME",
-complete:"COMPLETE LIFETIME"
-};
+function generarCodigo() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let result = "PARVAL-";
+    for (let i = 0; i < 6; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
 
 function mostrarMetodo(){
-const plan = document.getElementById("plan").value;
+    let plan = document.getElementById("plan").value;
 
-if(plan !== ""){
-document.getElementById("metodoCard").classList.remove("hidden");
-document.getElementById("pagoCard").classList.add("hidden");
-}
+    if(plan !== ""){
+        document.getElementById("metodoCard").classList.remove("hidden");
+    }
 }
 
 function mostrarPago(){
 
-const plan = document.getElementById("plan").value;
-const metodo = document.getElementById("metodo").value;
+    let plan = document.getElementById("plan").value;
+    let metodo = document.getElementById("metodo").value;
 
-planNombre = nombres[plan];
+    const nombres = {
+        sports1: "SPORTS 1M",
+        sports3: "SPORTS 3M",
+        sports6: "SPORTS 6M",
+        sports12: "SPORTS 12M",
+        sportslife: "SPORTS LIFETIME",
+        markets: "MARKETS LIFETIME",
+        complete: "COMPLETE LIFETIME"
+    };
 
-document.getElementById("planSeleccionado").innerText =
-"Plan seleccionado: " + planNombre;
+    const monto = {
+        sports1: "19 USD / 19 USDT / 75.000 COP",
+        sports3: "49 USD / 49 USDT / 185.000 COP",
+        sports6: "79 USD / 79 USDT / 300.000 COP",
+        sports12: "109 USD / 109 USDT / 420.000 COP",
+        sportslife: "149 USD / 149 USDT / 550.000 COP",
+        markets: "99 USD / 99 USDT / 370.000 COP",
+        complete: "209 USD / 209 USDT / 770.000 COP"
+    };
 
-document.getElementById("monto").innerText =
-"Monto a pagar: " + montos[plan];
+    let datosPago = "";
 
-let htmlBotones = "";
+    if(metodo === "binance"){
+        datosPago = "Binance Pay ID: 1072509354";
+    }
 
-if(metodo === "binance"){
+    if(metodo === "usdt"){
+        datosPago = "Wallet TRC20: Tpxh71QX5tj3iAmHcDCm7ic64EbFvbQMe";
+    }
 
-const id = "1072509354";
+    if(metodo === "transferencia"){
+        datosPago =
+        "Nequi: 3042875991\n" +
+        "Davivienda: 488447751451\n" +
+        "Llave: 3042875991";
+    }
 
-document.getElementById("datos").innerText =
-"Binance Pay ID: " + id;
+    codigoActual = generarCodigo();
 
-htmlBotones =
-`<button class="copy-btn" onclick="copiarTexto('${id}')">Copiar ID</button>`;
+    document.getElementById("planSeleccionado").innerText =
+        "Plan seleccionado: " + nombres[plan];
 
+    document.getElementById("monto").innerText =
+        "Monto a pagar: " + monto[plan];
+
+    document.getElementById("datos").innerText = datosPago;
+
+    document.getElementById("codigoOrden").innerText = codigoActual;
+
+    document.getElementById("pagoCard").classList.remove("hidden");
 }
 
-if(metodo === "usdt"){
-
-const wallet = "Tpxh71QX5tj3iAmHcDCm7ic64EbFvbQMe";
-
-document.getElementById("datos").innerText =
-"Wallet TRC20: " + wallet;
-
-htmlBotones =
-`<button class="copy-btn" onclick="copiarTexto('${wallet}')">Copiar Wallet</button>`;
-
-}
-
-if(metodo === "transferencia"){
-
-const nequi = "3042875991";
-const davivienda = "488447751451";
-const llave = "3042875991";
-
-document.getElementById("datos").innerText =
-"Nequi: " + nequi + " | Davivienda: " + davivienda + " | Llave: " + llave;
-
-htmlBotones = `
-<button class="copy-btn" onclick="copiarTexto('${nequi}')">Copiar Nequi</button>
-<button class="copy-btn" onclick="copiarTexto('${davivienda}')">Copiar Davivienda</button>
-<button class="copy-btn" onclick="copiarTexto('${llave}')">Copiar Llave</button>
-`;
-}
-
-document.getElementById("copyButtons").innerHTML = htmlBotones;
-document.getElementById("copyButtons").classList.remove("hidden");
-
-document.getElementById("pagoCard").classList.remove("hidden");
-
-}
-
-function copiarTexto(texto){
-navigator.clipboard.writeText(texto);
-alert("Copiado: " + texto);
+function copiarCodigo(){
+    navigator.clipboard.writeText(codigoActual);
+    alert("Código copiado");
 }
 
 function verificar(){
-window.open("https://discord.com/channels/1470902821296672823/1472373269381255198","_blank");
+    window.open("https://discord.com/channels/1470902821296672823/1472373269381255198", "_blank");
 }
 
 </script>
