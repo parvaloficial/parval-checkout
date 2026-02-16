@@ -81,17 +81,17 @@ function mostrarPago() {
   let plan = document.getElementById("plan").value;
   let metodo = document.getElementById("metodo").value;
 
-  let monto = {
-    sports1: "$19",
-    sports3: "$49",
-    sports6: "$79",
-    sports12: "$109",
-    sportslife: "$149",
-    markets: "$99",
-    complete: "$209"
-  };
+let monto = {
+  sports1: "19 USD / 19 USDT / 75.000 COP",
+  sports3: "49 USD / 49 USDT / 195.000 COP",
+  sports6: "79 USD / 79 USDT / 315.000 COP",
+  sports12: "109 USD / 109 USDT / 435.000 COP",
+  sportslife: "149 USD / 149 USDT / 595.000 COP",
+  markets: "99 USD / 99 USDT / 395.000 COP",
+  complete: "209 USD / 209 USDT / 835.000 COP"
+};
 
-  document.getElementById("monto").innerText = "Monto: " + monto[plan];
+  document.getElementById("monto").innerText = "Monto a pagar: " + monto[plan];
 
   if (metodo === "binance") {
     document.getElementById("datos").innerText =
