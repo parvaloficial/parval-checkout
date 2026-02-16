@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>PARVAL Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    .card {
+      background: #161b22;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 15px auto;
+      max-width: 400px;
+    }
+    button {
+      background: #238636;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    select {
+      padding: 8px;
+      margin-top: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<h1>📊 PARVAL Checkout</h1>
+
+<div class="card">
+  <h2>1️⃣ Selecciona tu plan</h2>
+  <select id="plan" onchange="mostrarMetodo()">
+    <option value="">-- Elige un plan --</option>
+    <option value="sports1">$19 SPORTS 1M</option>
+    <option value="sports3">$49 SPORTS 3M</option>
+    <option value="sports6">$79 SPORTS 6M</option>
+    <option value="sports12">$109 SPORTS 12M</option>
+    <option value="sportslife">$149 SPORTS LIFETIME</option>
+    <option value="markets">$99 MARKETS LIFETIME</option>
+    <option value="complete">$209 COMPLETE LIFETIME</option>
+  </select>
+</div>
+
+<div class="card hidden" id="metodoCard">
+  <h2>2️⃣ Método de pago</h2>
+  <select id="metodo" onchange="mostrarPago()">
+    <option value="">-- Elige método --</option>
+    <option value="binance">Binance Pay</option>
+    <option value="usdt">USDT TRC20</option>
+    <option value="transferencia">Transferencia</option>
+  </select>
+</div>
+
+<div class="card hidden" id="pagoCard">
+  <h2>3️⃣ Datos de pago</h2>
+  <p id="monto"></p>
+  <p id="datos"></p>
+
+  <button onclick="verificar()">Verificar pago en Discord</button>
+</div>
+
+<script>
+function mostrarMetodo() {
+  document.getElementById("metodoCard").classList.remove("hidden");
+}
+
+function mostrarPago() {
+  let plan = document.getElementById("plan").value;
+  let metodo = document.getElementById("metodo").value;
+
+  let monto = {
+    sports1: "$19",
+    sports3: "$49",
+    sports6: "$79",
+    sports12: "$109",
+    sportslife: "$149",
+    markets: "$99",
+    complete: "$209"
+  };
+
+  document.getElementById("monto").innerText = "Monto: " + monto[plan];
+
+  if (metodo === "binance") {
+    document.getElementById("datos").innerText =
+      "Pay ID: 1072509354";
+  }
+
+  if (metodo === "usdt") {
+    document.getElementById("datos").innerText =
+      "Wallet TRC20: TPxh71QX5jt3jAmHcDCDm71c64EbfvbQMe";
+  }
+
+  if (metodo === "transferencia") {
+    document.getElementById("datos").innerText =
+      "Nequi: 3042875991 | Davivienda: 488447751451";
+  }
+
+  document.getElementById("pagoCard").classList.remove("hidden");
+}
+
+function verificar() {
+  window.open("https://discord.com/channels/TU_SERVIDOR/TU_CANAL", "_blank");
+}
+</script>
+
+</body>
+</html>
