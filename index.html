@@ -24,12 +24,12 @@ const monto = {
 };
 
 function generarCodigo() {
-  const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let resultado = "PARVAL-";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result = "PARVAL-";
   for (let i = 0; i < 6; i++) {
-    resultado += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  return resultado;
+  return result;
 }
 
 function mostrarMetodo() {
@@ -49,7 +49,6 @@ function mostrarPago() {
   if (metodo === "") return;
 
   codigoOrden = generarCodigo();
-
   planNombre = nombres[plan];
 
   document.getElementById("planSeleccionado").innerText =
@@ -58,64 +57,58 @@ function mostrarPago() {
   document.getElementById("monto").innerText =
     "Monto a pagar: " + monto[plan];
 
-  let htmlDatos = "";
-  let botones = "";
+  document.getElementById("datos").innerHTML = "";
+  document.getElementById("copyButtons").innerHTML = "";
 
-  // 🟡 BINANCE PAY
+  // BINANCE
   if (metodo === "binance") {
 
     const payId = "1072509354";
 
-    htmlDatos = "Pay ID: " + payId;
+    document.getElementById("datos").innerText =
+      "Pay ID: " + payId;
 
-    botones = `
-      <button class="copy-btn" onclick="copiarTexto('${payId}')">📋 Copiar Pay ID</button>
-    `;
+    document.getElementById("copyButtons").innerHTML =
+      '<button class="copy-btn" onclick="copiarTexto(\'' + payId + '\')">📋 Copiar Pay ID</button>';
   }
 
-  // 🟠 USDT TRC20
+  // USDT
   if (metodo === "usdt") {
 
     const wallet = "Tpxh71QX5jt3jAmHcDCm7ic64EbFvbQMe";
 
-    htmlDatos = "Wallet TRC20: " + wallet;
+    document.getElementById("datos").innerText =
+      "Wallet TRC20: " + wallet;
 
-    botones = `
-      <button class="copy-btn" onclick="copiarTexto('${wallet}')">📋 Copiar Wallet</button>
-    `;
+    document.getElementById("copyButtons").innerHTML =
+      '<button class="copy-btn" onclick="copiarTexto(\'' + wallet + '\')">📋 Copiar Wallet</button>';
   }
 
-  // 🏦 TRANSFERENCIA
+  // TRANSFERENCIA
   if (metodo === "transferencia") {
 
     const nequi = "3042875991";
     const davivienda = "488447751451";
-    const llave = "3042875991"; // Llave Bre-B
+    const llave = "3042875991";
 
-    htmlDatos = `
-      Nequi: ${nequi}<br>
-      Davivienda: ${davivienda}<br>
-      Llave Bre-B: ${llave}
-    `;
+    document.getElementById("datos").innerHTML =
+      "Nequi: " + nequi + "<br>" +
+      "Davivienda: " + davivienda + "<br>" +
+      "Llave Bre-B: " + llave;
 
-    botones = `
-      <button class="copy-btn" onclick="copiarTexto('${nequi}')">📋 Copiar Nequi</button>
-      <button class="copy-btn" onclick="copiarTexto('${davivienda}')">📋 Copiar Davivienda</button>
-      <button class="copy-btn" onclick="copiarTexto('${llave}')">📋 Copiar Llave Bre-B</button>
-    `;
+    document.getElementById("copyButtons").innerHTML =
+      '<button class="copy-btn" onclick="copiarTexto(\'' + nequi + '\')">📋 Copiar Nequi</button>' +
+      '<button class="copy-btn" onclick="copiarTexto(\'' + davivienda + '\')">📋 Copiar Davivienda</button>' +
+      '<button class="copy-btn" onclick="copiarTexto(\'' + llave + '\')">📋 Copiar Llave Bre-B</button>';
   }
 
-  document.getElementById("datos").innerHTML = htmlDatos;
-
+  // CODIGO ORDEN SIEMPRE
   document.getElementById("codigoOrden").innerText = codigoOrden;
 
-  document.getElementById("copyButtons").innerHTML =
-    botones +
-    `<br><br>
-     <button class="copy-btn" onclick="copiarTexto('${codigoOrden}')">📋 Copiar código</button>`;
+  document.getElementById("copyButtons").innerHTML +=
+    '<br><br><button class="copy-btn" onclick="copiarTexto(\'' + codigoOrden + '\')">📋 Copiar código</button>';
 
   document.getElementById("copyButtons").classList.remove("hidden");
-
   document.getElementById("pagoCard").classList.remove("hidden");
 }
 
