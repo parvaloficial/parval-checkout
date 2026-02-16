@@ -1,6 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>PARVAL Checkout</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#0b0f14;
+  color:white;
+  text-align:center;
+  padding:40px;
+}
+.card{
+  background:#121821;
+  border-radius:12px;
+  padding:20px;
+  margin:20px auto;
+  max-width:420px;
+}
+.hidden{display:none;}
+select,button{
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  border:none;
+}
+button{
+  background:#2ecc71;
+  color:white;
+  cursor:pointer;
+}
+.copy-btn{
+  background:#34495e;
+  margin:5px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📊 PARVAL Checkout</h1>
+
+<!-- PASO 1 -->
+<div class="card">
+<h2>1️⃣ Selecciona tu plan</h2>
+<select id="plan" onchange="mostrarMetodo()">
+<option value="">-- Elige un plan --</option>
+<option value="sports1">SPORTS 1M</option>
+<option value="sports3">SPORTS 3M</option>
+<option value="sports6">SPORTS 6M</option>
+<option value="sports12">SPORTS 12M</option>
+<option value="sportslife">SPORTS LIFETIME</option>
+<option value="markets">MARKETS LIFETIME</option>
+<option value="complete">COMPLETE LIFETIME</option>
+</select>
+</div>
+
+<!-- PASO 2 -->
+<div class="card hidden" id="metodoCard">
+<h2>2️⃣ Método de pago</h2>
+<select id="metodo" onchange="mostrarPago()">
+<option value="">-- Elige método --</option>
+<option value="binance">Binance Pay</option>
+<option value="usdt">USDT (TRC20)</option>
+<option value="transferencia">Transferencia (Nequi / Davivienda)</option>
+</select>
+</div>
+
+<!-- PASO 3 -->
+<div class="card hidden" id="pagoCard">
+<h2>3️⃣ Datos de pago</h2>
+
+<p id="planSeleccionado"></p>
+<p id="monto"></p>
+<p id="datos"></p>
+
+<p><b>Código de orden:</b></p>
+<p id="codigoOrden"></p>
+
+<div id="copyButtons" class="hidden"></div>
+
+<br>
+<button onclick="verificar()">Abrir ticket de verificación</button>
+
+<p style="margin-top:15px;font-size:14px;color:#9ca3af;">
+Envía en el ticket:<br>
+• Código de orden<br>
+• Usuario de Discord<br>
+• Comprobante
+</p>
+
+</div>
+
 <script>
 
-let planNombre = "";
 let codigoOrden = "";
 
 const nombres = {
@@ -23,100 +117,83 @@ const monto = {
   complete: "209 USD / 209 USDT / 770.000 COP"
 };
 
-function generarCodigo() {
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let result = "PARVAL-";
-  for (let i = 0; i < 6; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
+function generarCodigo(){
+  const chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let result="PARVAL-";
+  for(let i=0;i<6;i++){
+    result+=chars.charAt(Math.floor(Math.random()*chars.length));
   }
   return result;
 }
 
-function mostrarMetodo() {
-  let plan = document.getElementById("plan").value;
-
-  if (plan !== "") {
+function mostrarMetodo(){
+  let plan=document.getElementById("plan").value;
+  if(plan!==""){
     document.getElementById("metodoCard").classList.remove("hidden");
     document.getElementById("pagoCard").classList.add("hidden");
   }
 }
 
-function mostrarPago() {
+function mostrarPago(){
 
-  let plan = document.getElementById("plan").value;
-  let metodo = document.getElementById("metodo").value;
+  let plan=document.getElementById("plan").value;
+  let metodo=document.getElementById("metodo").value;
 
-  if (metodo === "") return;
+  if(metodo==="") return;
 
-  codigoOrden = generarCodigo();
-  planNombre = nombres[plan];
+  codigoOrden=generarCodigo();
 
-  document.getElementById("planSeleccionado").innerText =
-    "Plan seleccionado: " + planNombre;
+  document.getElementById("planSeleccionado").innerText=
+    "Plan seleccionado: "+nombres[plan];
 
-  document.getElementById("monto").innerText =
-    "Monto a pagar: " + monto[plan];
+  document.getElementById("monto").innerText=
+    "Monto a pagar: "+monto[plan];
 
-  document.getElementById("datos").innerHTML = "";
-  document.getElementById("copyButtons").innerHTML = "";
+  let datos="";
+  let botones="";
 
-  // BINANCE
-  if (metodo === "binance") {
-
-    const payId = "1072509354";
-
-    document.getElementById("datos").innerText =
-      "Pay ID: " + payId;
-
-    document.getElementById("copyButtons").innerHTML =
-      '<button class="copy-btn" onclick="copiarTexto(\'' + payId + '\')">📋 Copiar Pay ID</button>';
+  if(metodo==="binance"){
+    const payId="1072509354";
+    datos="Pay ID: "+payId;
+    botones='<button class="copy-btn" onclick="copiarTexto(\''+payId+'\')">📋 Copiar Pay ID</button>';
   }
 
-  // USDT
-  if (metodo === "usdt") {
-
-    const wallet = "Tpxh71QX5jt3jAmHcDCm7ic64EbFvbQMe";
-
-    document.getElementById("datos").innerText =
-      "Wallet TRC20: " + wallet;
-
-    document.getElementById("copyButtons").innerHTML =
-      '<button class="copy-btn" onclick="copiarTexto(\'' + wallet + '\')">📋 Copiar Wallet</button>';
+  if(metodo==="usdt"){
+    const wallet="Tpxh71QX5jt3jAmHcDCm7ic64EbFvbQMe";
+    datos="Wallet TRC20: "+wallet;
+    botones='<button class="copy-btn" onclick="copiarTexto(\''+wallet+'\')">📋 Copiar Wallet</button>';
   }
 
-  // TRANSFERENCIA
-  if (metodo === "transferencia") {
+  if(metodo==="transferencia"){
+    const nequi="3042875991";
+    const davivienda="488447751451";
+    const llave="3042875991";
 
-    const nequi = "3042875991";
-    const davivienda = "488447751451";
-    const llave = "3042875991";
+    datos="Nequi: "+nequi+"<br>Davivienda: "+davivienda+"<br>Llave Bre-B: "+llave;
 
-    document.getElementById("datos").innerHTML =
-      "Nequi: " + nequi + "<br>" +
-      "Davivienda: " + davivienda + "<br>" +
-      "Llave Bre-B: " + llave;
-
-    document.getElementById("copyButtons").innerHTML =
-      '<button class="copy-btn" onclick="copiarTexto(\'' + nequi + '\')">📋 Copiar Nequi</button>' +
-      '<button class="copy-btn" onclick="copiarTexto(\'' + davivienda + '\')">📋 Copiar Davivienda</button>' +
-      '<button class="copy-btn" onclick="copiarTexto(\'' + llave + '\')">📋 Copiar Llave Bre-B</button>';
+    botones=
+    '<button class="copy-btn" onclick="copiarTexto(\''+nequi+'\')">📋 Copiar Nequi</button>'+
+    '<button class="copy-btn" onclick="copiarTexto(\''+davivienda+'\')">📋 Copiar Davivienda</button>'+
+    '<button class="copy-btn" onclick="copiarTexto(\''+llave+'\')">📋 Copiar Llave Bre-B</button>';
   }
 
-  // CODIGO ORDEN SIEMPRE
-  document.getElementById("codigoOrden").innerText = codigoOrden;
+  document.getElementById("datos").innerHTML=datos;
 
-  document.getElementById("copyButtons").innerHTML +=
-    '<br><br><button class="copy-btn" onclick="copiarTexto(\'' + codigoOrden + '\')">📋 Copiar código</button>';
+  document.getElementById("codigoOrden").innerText=codigoOrden;
+
+  document.getElementById("copyButtons").innerHTML=
+    botones+
+    '<br><br><button class="copy-btn" onclick="copiarTexto(\''+codigoOrden+'\')">📋 Copiar código</button>';
 
   document.getElementById("copyButtons").classList.remove("hidden");
   document.getElementById("pagoCard").classList.remove("hidden");
 }
 
-function copiarTexto(texto) {
+function copiarTexto(texto){
   navigator.clipboard.writeText(texto);
 }
 
-function verificar() {
+function verificar(){
   window.open(
     "https://discord.com/channels/1470902821296672823/1472373269381255198",
     "_blank"
@@ -124,3 +201,6 @@ function verificar() {
 }
 
 </script>
+
+</body>
+</html>
