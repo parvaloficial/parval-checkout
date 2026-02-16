@@ -1,118 +1,134 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>PARVAL Checkout</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0d1117;
-      color: white;
-      text-align: center;
-      padding: 40px;
-    }
-    .card {
-      background: #161b22;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 15px auto;
-      max-width: 400px;
-    }
-    button {
-      background: #238636;
-      border: none;
-      padding: 10px 20px;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    select {
-      padding: 8px;
-      margin-top: 10px;
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>PARVAL Checkout</title>
+
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#0d1117;
+  color:white;
+  text-align:center;
+  padding:40px;
+}
+.card{
+  background:#161b22;
+  border-radius:12px;
+  padding:25px;
+  margin:20px auto;
+  max-width:420px;
+}
+select, button{
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:none;
+}
+button{
+  background:#238636;
+  color:white;
+  cursor:pointer;
+}
+.hidden{display:none;}
+h1{margin-bottom:30px;}
+</style>
 </head>
+
 <body>
 
 <h1>📊 PARVAL Checkout</h1>
 
+<!-- PASO 1 -->
 <div class="card">
-  <h2>1️⃣ Selecciona tu plan</h2>
-  <select id="plan" onchange="mostrarMetodo()">
-    <option value="">-- Elige un plan --</option>
-    <option value="sports1">$19 SPORTS 1M</option>
-    <option value="sports3">$49 SPORTS 3M</option>
-    <option value="sports6">$79 SPORTS 6M</option>
-    <option value="sports12">$109 SPORTS 12M</option>
-    <option value="sportslife">$149 SPORTS LIFETIME</option>
-    <option value="markets">$99 MARKETS LIFETIME</option>
-    <option value="complete">$209 COMPLETE LIFETIME</option>
-  </select>
+<h2>1️⃣ Selecciona tu plan</h2>
+<select id="plan" onchange="mostrarMetodo()">
+<option value="">-- Elige un plan --</option>
+<option value="sports1">SPORTS 1M — 19 USD / 19 USDT / 75.000 COP</option>
+<option value="sports3">SPORTS 3M — 49 USD / 49 USDT / 195.000 COP</option>
+<option value="sports6">SPORTS 6M — 79 USD / 79 USDT / 315.000 COP</option>
+<option value="sports12">SPORTS 12M — 109 USD / 109 USDT / 435.000 COP</option>
+<option value="sportslife">SPORTS LIFETIME — 149 USD / 149 USDT / 595.000 COP</option>
+<option value="markets">MARKETS LIFETIME — 99 USD / 99 USDT / 395.000 COP</option>
+<option value="complete">COMPLETE LIFETIME — 209 USD / 209 USDT / 835.000 COP</option>
+</select>
 </div>
 
-<div class="card hidden" id="metodoCard">
-  <h2>2️⃣ Método de pago</h2>
-  <select id="metodo" onchange="mostrarPago()">
-    <option value="">-- Elige método --</option>
-    <option value="binance">Binance Pay</option>
-    <option value="usdt">USDT TRC20</option>
-    <option value="transferencia">Transferencia</option>
-  </select>
+<!-- PASO 2 -->
+<div id="metodoCard" class="card hidden">
+<h2>2️⃣ Método de pago</h2>
+<select id="metodo" onchange="mostrarPago()">
+<option value="">-- Elige un método --</option>
+<option value="binance">Binance Pay</option>
+<option value="usdt">USDT TRC20</option>
+<option value="transferencia">Transferencia Bancaria</option>
+</select>
 </div>
 
-<div class="card hidden" id="pagoCard">
-  <h2>3️⃣ Datos de pago</h2>
-  <p id="monto"></p>
-  <p id="datos"></p>
+<!-- PASO 3 -->
+<div id="pagoCard" class="card hidden">
+<h2>3️⃣ Datos de pago</h2>
 
-  <button onclick="verificar()">Verificar pago en Discord</button>
+<p id="datos"></p>
+
+<hr style="margin:15px 0; opacity:0.2;">
+
+<p id="montoFinal"></p>
+
+<button onclick="verificar()">Enviar comprobante en Discord</button>
 </div>
 
 <script>
-function mostrarMetodo() {
-  document.getElementById("metodoCard").classList.remove("hidden");
+function mostrarMetodo(){
+  let plan = document.getElementById("plan").value;
+  if(plan !== ""){
+    document.getElementById("metodoCard").classList.remove("hidden");
+  }
 }
 
-function mostrarPago() {
+function mostrarPago(){
+
   let plan = document.getElementById("plan").value;
   let metodo = document.getElementById("metodo").value;
 
-let monto = {
-  sports1: "19 USD / 19 USDT / 75.000 COP",
-  sports3: "49 USD / 49 USDT / 195.000 COP",
-  sports6: "79 USD / 79 USDT / 315.000 COP",
-  sports12: "109 USD / 109 USDT / 435.000 COP",
-  sportslife: "149 USD / 149 USDT / 595.000 COP",
-  markets: "99 USD / 99 USDT / 395.000 COP",
-  complete: "209 USD / 209 USDT / 835.000 COP"
-};
+  let monto = {
+    sports1:"19 USD / 19 USDT / 75.000 COP",
+    sports3:"49 USD / 49 USDT / 195.000 COP",
+    sports6:"79 USD / 79 USDT / 315.000 COP",
+    sports12:"109 USD / 109 USDT / 435.000 COP",
+    sportslife:"149 USD / 149 USDT / 595.000 COP",
+    markets:"99 USD / 99 USDT / 395.000 COP",
+    complete:"209 USD / 209 USDT / 835.000 COP"
+  };
 
-  document.getElementById("monto").innerText = "Monto a pagar: " + monto[plan];
+  let datos = "";
 
-  if (metodo === "binance") {
-    document.getElementById("datos").innerText =
-      "Pay ID: 1072509354";
+  if(metodo === "binance"){
+    datos = "Binance Pay ID:<br><b>1072509354</b>";
   }
 
-  if (metodo === "usdt") {
-    document.getElementById("datos").innerText =
-      "Wallet TRC20: TPxh71QX5jt3jAmHcDCDm71c64EbfvbQMe";
+  if(metodo === "usdt"){
+    datos = "Wallet TRC20:<br><b>TXh7l0X5jt3jAHbCDm7ic64EbvbQME</b>";
   }
 
-  if (metodo === "transferencia") {
-    document.getElementById("datos").innerText =
-      "Nequi: 3042875991 | Davivienda: 488447751451 | Llave: 3042875991";
+  if(metodo === "transferencia"){
+    datos = `
+    Nequi: <b>3042875991</b><br>
+    Davivienda: <b>488447751451</b><br>
+    Llave: <b>3042875991</b>
+    `;
   }
+
+  document.getElementById("datos").innerHTML = datos;
+
+  document.getElementById("montoFinal").innerHTML =
+  "<b>Monto a pagar:</b><br>" + monto[plan];
 
   document.getElementById("pagoCard").classList.remove("hidden");
 }
 
-function verificar() {
-  window.open("https://discord.com/channels/1470902821296672823/1472373269381255198", "_blank");
+function verificar(){
+  window.open("https://discord.com/channels/1470902821296672823/1472373269381255198","_blank");
 }
 </script>
 
